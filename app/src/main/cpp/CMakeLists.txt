@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${CMAKE_SOURCE_DIR}/libs/x264/${ANDROI
 add_library(
         pushdemo
         SHARED
+        VideoChannel.cpp
         native-lib.cpp)
 
 find_library(

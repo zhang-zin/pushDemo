@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         lifecycle
     }
 
-    external fun stringFromJNI(): String
-
-    fun start(view: View) {}
+    fun start(view: View) {
+        livePusher.startLive()
+    }
     fun stop(view: View) {}
     fun switchCamera(view: View) {
         livePusher.switchCamera()

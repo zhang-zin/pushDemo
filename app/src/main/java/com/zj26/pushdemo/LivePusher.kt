@@ -1,6 +1,5 @@
 package com.zj26.pushdemo
 
-import android.app.Activity
 import android.view.SurfaceHolder
 import androidx.activity.ComponentActivity
 import com.zj26.pushdemo.push.AudioChannel
@@ -25,6 +24,7 @@ class LivePusher(
 
     init {
         videoChannel = VideoChannel(this, activity, width, height, bitrate, fps, cameraID)
+        native_init()
     }
 
     fun setPreviewDisplay(surfaceHolder: SurfaceHolder) {
@@ -34,4 +34,14 @@ class LivePusher(
     fun switchCamera() {
         videoChannel.switchCamera()
     }
+
+    fun startLive() {
+        native_start("")
+        videoChannel.startLive()
+    }
+
+    private external fun native_init()
+    private external fun native_start(url: String)
+    external fun native_setVideoEncInfo(width: Int, height: Int, fps: Int, bitrate: Int)
+    external fun native_pushVideo(data: ByteArray)
 }

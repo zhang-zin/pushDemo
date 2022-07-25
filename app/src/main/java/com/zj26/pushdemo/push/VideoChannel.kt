@@ -1,21 +1,21 @@
 package com.zj26.pushdemo.push
 
-import android.app.Activity
 import android.hardware.Camera
 import android.view.SurfaceHolder
 import androidx.activity.ComponentActivity
 import com.zj26.pushdemo.LivePusher
 
 class VideoChannel(
-    livePusher: LivePusher,
+    private val livePusher: LivePusher,
     activity: ComponentActivity,
-    width: Int,
-    height: Int,
-    bitrate: Int,
-    fps: Int,
+    private val width: Int,
+    private val height: Int,
+    private val bitrate: Int,
+    private val fps: Int,
     cameraID: Int
 ) : Camera.PreviewCallback, CameraHelper.OnChangedSizeListener {
 
+    private var isLiving: Boolean = false
     private val cameraHelper: CameraHelper
 
     init {
@@ -24,11 +24,14 @@ class VideoChannel(
         cameraHelper.setOnChangedSizeListener(this)
     }
 
-    override fun onPreviewFrame(data: ByteArray?, camera: Camera?) {
+    override fun onPreviewFrame(data: ByteArray, camera: Camera) {
+        if (isLiving){
+            livePusher.native_pushVideo(data)
+        }
     }
 
     override fun onChanged(w: Int, h: Int) {
-
+        livePusher.native_setVideoEncInfo(width, height, fps, bitrate)
     }
 
     fun setPreviewDisplay(surfaceHolder: SurfaceHolder) {
@@ -37,6 +40,10 @@ class VideoChannel(
 
     fun switchCamera() {
         cameraHelper.switchCamera()
+    }
+
+    fun startLive() {
+        isLiving = true
     }
 
 

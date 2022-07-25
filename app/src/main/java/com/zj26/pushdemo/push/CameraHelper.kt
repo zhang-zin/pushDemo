@@ -18,7 +18,7 @@ class CameraHelper(
     cameraID: Int,
     width: Int,
     height: Int
-) : SurfaceHolder.Callback, Camera.PreviewCallback, LifecycleObserver {
+) : SurfaceHolder.Callback, PreviewCallback, LifecycleObserver {
 
     private var mCameraId = cameraID
     private var mCamera: Camera? = null
@@ -77,10 +77,10 @@ class CameraHelper(
     }
 
     fun switchCamera() {
-        if (mCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
-            mCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT
+        mCameraId = if (mCameraId == CameraInfo.CAMERA_FACING_BACK) {
+            CameraInfo.CAMERA_FACING_FRONT
         } else {
-            mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK
+            CameraInfo.CAMERA_FACING_BACK
         }
         stopPreview()
         startPreview()
@@ -226,7 +226,6 @@ class CameraHelper(
             }
         }
     }
-
 
     interface OnChangedSizeListener {
         fun onChanged(w: Int, h: Int)
