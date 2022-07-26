@@ -1,5 +1,4 @@
 #include "VideoChannel.h"
-#include "macro.h"
 
 /**
  * 初始化视频编码信息
@@ -88,7 +87,7 @@ void VideoChannel::encodeData(int8_t *data) {
         } else if (pp_nal[i].i_type == NAL_PPS) {
             // 单独发送sps和pps
             pps_len = pp_nal[i].i_payload - 4;
-            memcpy(sps, pp_nal[i].p_payload + 4, sps_len);
+            memcpy(pps, pp_nal[i].p_payload + 4, pps_len);
             sendSpsPps(sps, pps, sps_len, pps_len);
         } else {
             // 发送关键帧和非关键帧

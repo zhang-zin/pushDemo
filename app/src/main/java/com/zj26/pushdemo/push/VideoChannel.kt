@@ -1,6 +1,7 @@
 package com.zj26.pushdemo.push
 
 import android.hardware.Camera
+import android.util.Log
 import android.view.SurfaceHolder
 import androidx.activity.ComponentActivity
 import com.zj26.pushdemo.LivePusher
@@ -8,8 +9,8 @@ import com.zj26.pushdemo.LivePusher
 class VideoChannel(
     private val livePusher: LivePusher,
     activity: ComponentActivity,
-    private val width: Int,
-    private val height: Int,
+    width: Int,
+    height: Int,
     private val bitrate: Int,
     private val fps: Int,
     cameraID: Int
@@ -31,7 +32,7 @@ class VideoChannel(
     }
 
     override fun onChanged(w: Int, h: Int) {
-        livePusher.native_setVideoEncInfo(width, height, fps, bitrate)
+        livePusher.native_setVideoEncInfo(w, h, fps, bitrate)
     }
 
     fun setPreviewDisplay(surfaceHolder: SurfaceHolder) {

@@ -36,7 +36,7 @@ class LivePusher(
     }
 
     fun startLive() {
-        native_start("")
+        native_start("rtmp://124.70.105.64/myapp")
         videoChannel.startLive()
     }
 

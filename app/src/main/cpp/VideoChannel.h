@@ -3,9 +3,10 @@
 #define PUSHDEMO_VIDEOCHANNEL_H
 
 #include "x264.h"
-#include "librtmp/rtmp.h"
-#include <jni.h>
+#include <pty.h>
 #include <cstring>
+#include "librtmp/rtmp.h"
+#include "macro.h"
 
 class VideoChannel {
     typedef void (*VideoCallback)(RTMPPacket *packet);

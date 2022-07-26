@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include <pthread.h>
+#include <unistd.h>
 #include "VideoChannel.h"
 #include "librtmp/rtmp.h"
 #include "macro.h"
@@ -51,6 +52,7 @@ void *start(void *args) {
         return nullptr;
     }
     rtmp->Link.timeout = 5;
+    RTMP_EnableWrite(rtmp);
     ret = RTMP_Connect(rtmp, nullptr);
     if (!ret) {
         LOGE("连接服务器:%s", url);
