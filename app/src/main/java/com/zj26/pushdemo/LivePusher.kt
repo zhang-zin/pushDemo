@@ -19,12 +19,13 @@ class LivePusher(
         }
     }
 
-    private val audioChannel: AudioChannel = AudioChannel(this)
+    private val audioChannel: AudioChannel
     private val videoChannel: VideoChannel
 
     init {
-        videoChannel = VideoChannel(this, activity, width, height, bitrate, fps, cameraID)
         native_init()
+        videoChannel = VideoChannel(this, activity, width, height, bitrate, fps, cameraID)
+        audioChannel = AudioChannel(this, activity)
     }
 
     fun setPreviewDisplay(surfaceHolder: SurfaceHolder) {
@@ -38,10 +39,22 @@ class LivePusher(
     fun startLive() {
         native_start("rtmp://124.70.105.64/myapp")
         videoChannel.startLive()
+        audioChannel.startLive()
+    }
+
+    fun stopLive() {
+        release()
+        audioChannel.release()
+        videoChannel.stopLive()
     }
 
     private external fun native_init()
     private external fun native_start(url: String)
+    private external fun release()
+
     external fun native_setVideoEncInfo(width: Int, height: Int, fps: Int, bitrate: Int)
     external fun native_pushVideo(data: ByteArray)
+    external fun getInputSamples(): Int
+    external fun native_setAudioEncInfo(sampleRateInHz: Int, channel: Int)
+    external fun native_pushAudio(bytes: ByteArray)
 }

@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "VideoChannel.h"
+#include "AudioChannel.h"
 #include "librtmp/rtmp.h"
 #include "macro.h"
 #include "safe_queue.h"
@@ -13,6 +14,7 @@ int readyPushing;
 pthread_t pid;
 
 VideoChannel *videoChannel;
+AudioChannel *audioChannel;
 SafeQueue<RTMPPacket *> packets; // 队列
 
 void callback(RTMPPacket *packet) {
@@ -69,6 +71,7 @@ void *start(void *args) {
 
     packets.setWork(1);
     RTMPPacket *packet = nullptr;
+    callback(audioChannel->getAudioTag());
     while (readyPushing) {
         packets.get(packet);
         if (!readyPushing) {
@@ -102,6 +105,8 @@ JNIEXPORT void JNICALL
 Java_com_zj26_pushdemo_LivePusher_native_1init(JNIEnv *env, jobject thiz) {
     videoChannel = new VideoChannel();
     videoChannel->setVideoCallback(callback);
+    audioChannel = new AudioChannel();
+    audioChannel->setAudioCallback(callback);
 }
 
 extern "C"
@@ -137,4 +142,37 @@ Java_com_zj26_pushdemo_LivePusher_native_1pushVideo(JNIEnv *env, jobject thiz, j
     jbyte *data = env->GetByteArrayElements(data_, nullptr);
     videoChannel->encodeData(data);
     env->ReleaseByteArrayElements(data_, data, 0);
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_zj26_pushdemo_LivePusher_getInputSamples(JNIEnv *env, jobject thiz) {
+    if (audioChannel) {
+        return audioChannel->getInputSamples();
+    }
+    return -1;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zj26_pushdemo_LivePusher_native_1setAudioEncInfo(JNIEnv *env, jobject thiz,
+                                                          jint sample_rate_in_hz, jint channel) {
+    if (audioChannel) {
+        audioChannel->setAudioEncInfo(sample_rate_in_hz, channel);
+    }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zj26_pushdemo_LivePusher_native_1pushAudio(JNIEnv *env, jobject thiz, jbyteArray bytes) {
+    if (!audioChannel || !readyPushing) {
+        return;
+    }
+    jbyte *data = env->GetByteArrayElements(bytes, nullptr);
+    audioChannel->encodeData(data);
+    env->ReleaseByteArrayElements(bytes, data, 0);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zj26_pushdemo_LivePusher_release(JNIEnv *env, jobject thiz) {
+    readyPushing = false;
+    DELETE(audioChannel)
+    DELETE(videoChannel)
 }

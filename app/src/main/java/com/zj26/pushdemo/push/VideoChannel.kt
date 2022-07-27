@@ -47,5 +47,8 @@ class VideoChannel(
         isLiving = true
     }
 
+    fun stopLive(){
+        isLiving = false
+    }
 
 }

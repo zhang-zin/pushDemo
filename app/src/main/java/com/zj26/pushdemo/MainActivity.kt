@@ -48,7 +48,9 @@ class MainActivity : AppCompatActivity() {
     fun start(view: View) {
         livePusher.startLive()
     }
-    fun stop(view: View) {}
+    fun stop(view: View) {
+        livePusher.stopLive()
+    }
     fun switchCamera(view: View) {
         livePusher.switchCamera()
     }

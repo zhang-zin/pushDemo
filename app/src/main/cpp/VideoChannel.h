@@ -13,13 +13,12 @@ class VideoChannel {
 
 public:
     void setVideoEncInfo(int width, int height, int fps, int bitrate);
+
     void setVideoCallback(VideoCallback videoCallback_);
+
     void encodeData(int8_t *data);
 
-    ~VideoChannel() {
-
-    }
-
+    ~VideoChannel();
 
 private:
     int mWidth;
@@ -33,6 +32,7 @@ private:
     VideoCallback videoCallback;
 
     void sendSpsPps(uint8_t sps[100], uint8_t pps[100], int sps_len, int pps_len);
+
     void sendFrame(int type, uint8_t *payload, int i_payload);
 };
 

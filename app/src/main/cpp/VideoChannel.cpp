@@ -187,3 +187,14 @@ void VideoChannel::sendFrame(int type, uint8_t *payload, int i_payload) {
     packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
     videoCallback(packet);
 }
+
+VideoChannel::~VideoChannel() {
+    if (videoCodec) {
+        x264_encoder_close(videoCodec);
+        videoCodec = 0;
+    }
+    if (pic_in) {
+        x264_picture_clean(pic_in);
+        DELETE(pic_in);
+    }
+}

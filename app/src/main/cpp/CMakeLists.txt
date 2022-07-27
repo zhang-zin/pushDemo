@@ -6,11 +6,13 @@ include_directories(include)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/librtmp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${CMAKE_SOURCE_DIR}/libs/x264/${ANDROID_ABI}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${CMAKE_SOURCE_DIR}/libs/faac/${ANDROID_ABI}")
 
 add_library(
         pushdemo
         SHARED
         VideoChannel.cpp
+        AudioChannel.cpp
         native-lib.cpp)
 
 find_library(
@@ -21,4 +23,5 @@ target_link_libraries(
         pushdemo
         rtmp
         x264
+        faac
         ${log-lib})
